@@ -49,8 +49,18 @@ int main(int argc, char** argv)
 	for (int i = 1; i < nodeNum; i++)
 		adj[i] = adj[i - 1] + 4;
 
-
-
+	fseek(fp, SEEK_SET, 0);
+	for (int i = 0; i < nodeNum; i++)
+	{
+		for (int j = 0; j < nodeNum; j++)
+			fscanf_s(fp, "%d", &adj[i][j]);
+	}
+	for (int i = 0; i < nodeNum; i++)
+	{
+		for (int j = 0; j < nodeNum; j++)
+			printf("%d ", adj[i][j]);
+		putchar('\n');
+	}
 
 
 	free(adj[0]);
