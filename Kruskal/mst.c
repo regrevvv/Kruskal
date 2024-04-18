@@ -36,13 +36,13 @@ int main(int argc, char** argv)
 	//2차원 배열 동적 할당후 인접행렬 데이터 삽입
 	int** adj;
 	if ((adj = (int**)malloc(sizeof(int*) * nodeNum)) == NULL) {
-		perror("Memory allocate error!");
+		perror("Memory allocate error! - adjacent matrix");
 		return -1;
 	}
 
 	if ((adj[0] = (int*)malloc(sizeof(int) * nodeNum * nodeNum)) == NULL)
 	{
-		perror("Memory allocate error!");
+		perror("Memory allocate error! - adjacent matrix");
 		return -1;
 	}
 	
@@ -62,6 +62,21 @@ int main(int argc, char** argv)
 		putchar('\n');
 	}
 
+	const int n = nodeNum;
+	typedef int index;
+	typedef index set_pointer;
+
+	typedef struct nodetype
+	{
+		index parent;
+		int depth;
+	} universe;
+
+	universe* U = (universe*)malloc(sizeof(universe) * n);
+	if (U == NULL)
+	{
+		perror("Memory allocate error! - universe array");
+	}
 
 	free(adj[0]);
 	free(adj);
