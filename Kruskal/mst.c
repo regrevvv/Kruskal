@@ -1,6 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+typedef struct nodetype
+{
+	index parent;
+	int depth;
+} universe;
+
 int main(int argc, char** argv)
 {
 	//input 파일 열기
@@ -58,7 +64,7 @@ int main(int argc, char** argv)
 	for (int i = 0; i < nodeNum; i++)
 	{
 		for (int j = 0; j < nodeNum; j++)
-			printf("%d ", adj[i][j]);
+			printf("%3d ", adj[i][j]);
 		putchar('\n');
 	}
 
@@ -66,20 +72,31 @@ int main(int argc, char** argv)
 	typedef int index;
 	typedef index set_pointer;
 
-	typedef struct nodetype
-	{
-		index parent;
-		int depth;
-	} universe;
-
 	universe* U = (universe*)malloc(sizeof(universe) * n);
 	if (U == NULL)
 	{
 		perror("Memory allocate error! - universe array");
+		return -1;
 	}
 
+	//makeset
+	for (int i = 0; i < nodeNum; i++)
+	{
+		U[i].parent = i;
+		U[i].depth = 0;
+	}
+
+	free(U);
 	free(adj[0]);
 	free(adj);
 	fclose(fp);
 	return 0;
+}
+
+set_pointer	find(universe* U, int i)
+{
+	int j = i;
+	while (U[j].parent != j)
+		j = U[j].parent;
+	return j;
 }
