@@ -16,9 +16,11 @@ typedef struct edge
 	index q;
 }Edge;
 
-int cmpfunc(const void*, const void*);
 set_pointer	find(universe*, int);
 void merge(universe*, set_pointer, set_pointer);
+int equal(set_pointer, set_pointer);
+int cmpfunc(const void*, const void*);
+
 
 int main(int argc, char** argv)
 {
@@ -81,6 +83,13 @@ int main(int argc, char** argv)
 	}
 	for (int i = 1; i < nodeNum; i++)
 		mst[i] = mst[i - 1] + 4;
+	for (int i = 0; i < nodeNum; i++)
+		for (int j = 0; j < nodeNum; j++)
+			if (i == j)
+				mst[i][j] = 0;
+			else
+				mst[i][j] = -1;
+
 
 	fseek(fp, SEEK_SET, 0);
 	for (int i = 0; i < nodeNum; i++)
@@ -89,27 +98,18 @@ int main(int argc, char** argv)
 			fscanf_s(fp, "%d", &adj[i][j]);
 	}
 
-	//출력하기
-
-	putchar(' ');
-	for (int i = 0; i < nodeNum; i++)
-	{
-		printf("%4c", i + 65);
-	}
-	for (int i = 0; i < nodeNum; i++)
-	{
-		putchar('\n');
-		printf("%c", i + 65);
-		for (int j = 0; j < nodeNum; j++)
-			printf("%4d", adj[i][j]);
-	}
-
 	int edgeNum = 0;
 	for (int i = 0; i < nodeNum; i++)
 		for (int j = i + 1; j < nodeNum; j++)
 			if (adj[i][j] > 0)
 				edgeNum++;
 	Edge* sortedEdge = (Edge*)malloc(sizeof(Edge) * edgeNum);
+	if (sortedEdge == NULL)
+	{
+		perror("Memory allocate error- sortedEdge");
+		return -1;
+	}
+
 
 	for (int i = 0, k = 0; i < nodeNum; i++)
 		for (int j = i + 1; j < nodeNum; j++)	
@@ -139,7 +139,38 @@ int main(int argc, char** argv)
 		U[i].depth = 0;
 	}
 
+	int mstNodeNum = nodeNum - 1;
+	int edgeIndex = 0;
+	while (mstNodeNum)
+	{
+		index i = sortedEdge[edgeIndex].p;
+		index j = sortedEdge[edgeIndex].q;
+		set_pointer p = find(U, i);
+		set_pointer q = find(U, j);
 
+		if (!equal(p, q))
+		{
+			merge(U, p, q);
+			mst[i][j] = sortedEdge[edgeIndex].weight;
+			mst[j][i] = sortedEdge[edgeIndex].weight;
+			mstNodeNum--;
+		}
+		edgeIndex++;
+	}
+
+	//출력하기
+	putchar(' ');
+	for (int i = 0; i < nodeNum; i++)
+	{
+		printf("%4c", i + 65);
+	}
+	for (int i = 0; i < nodeNum; i++)
+	{
+		putchar('\n');
+		printf("%c", i + 65);
+		for (int j = 0; j < nodeNum; j++)
+			printf("%4d", mst[i][j]);
+	}
 
 	free(U);
 	free(sortedEdge);
