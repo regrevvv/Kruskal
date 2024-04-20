@@ -42,9 +42,18 @@ int main(int argc, char** argv)
 	int loop = 1, nodeNum = 0;
 	while (loop)
 	{
-		switch (fgetc(fp))
+		int nextC = fgetc(fp);
+		switch (nextC)
 		{
 		case ' ':
+			do
+			{
+				nextC = fgetc(fp);
+				if (nextC == '\n')
+				{
+					loop = 0;
+				}
+			} while (nextC == ' ');
 			nodeNum++;
 			break;
 		case '\n':
@@ -53,7 +62,6 @@ int main(int argc, char** argv)
 			break;
 		}
 	}
-
 
 	//2차원 배열 동적 할당후 인접행렬 데이터 삽입
 	int** adj;
