@@ -54,6 +54,7 @@ int main(int argc, char** argv)
 		}
 	}
 
+
 	//2차원 배열 동적 할당후 인접행렬 데이터 삽입
 	int** adj;
 	if ((adj = (int**)malloc(sizeof(int*) * nodeNum)) == NULL) {
@@ -67,7 +68,7 @@ int main(int argc, char** argv)
 		return -1;
 	}
 	for (int i = 1; i < nodeNum; i++)
-		adj[i] = adj[i - 1] + 4;
+		adj[i] = adj[i - 1] + nodeNum;
 
 
 	int** mst;//결과를 저장할 배열
@@ -82,7 +83,7 @@ int main(int argc, char** argv)
 		return -1;
 	}
 	for (int i = 1; i < nodeNum; i++)
-		mst[i] = mst[i - 1] + 4;
+		mst[i] = mst[i - 1] + nodeNum;
 	for (int i = 0; i < nodeNum; i++)
 		for (int j = 0; j < nodeNum; j++)
 			if (i == j)
@@ -197,9 +198,9 @@ void merge(universe* U, set_pointer p, set_pointer q) {
 		U[q].parent = p;
 	}
 	else if (U[p].depth < U[q].depth)
-		U[q].parent = q;
+		U[p].parent = q;
 	else
-		U[p].parent = p;
+		U[q].parent = p;
 }
 
 int equal(set_pointer p, set_pointer q)
