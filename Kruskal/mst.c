@@ -1,3 +1,5 @@
+#define _CRT_SECURE_NO_WARNINGS
+
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -32,7 +34,8 @@ int main(int argc, char** argv)
 		return -1;
 	}
 
-	if ((fopen_s(&fp, argv[1], "r")) != 0)
+	fp = fopen(argv[1], "r");
+	if (fp == NULL)
 	{
 		perror("Failed to open file.");
 		return -1;
@@ -104,7 +107,7 @@ int main(int argc, char** argv)
 	for (int i = 0; i < nodeNum; i++)
 	{
 		for (int j = 0; j < nodeNum; j++)
-			fscanf_s(fp, "%d", &adj[i][j]);
+			fscanf(fp, "%d", &adj[i][j]);
 	}
 
 	int edgeNum = 0;
